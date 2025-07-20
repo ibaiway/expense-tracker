@@ -11,4 +11,7 @@ export const auth = betterAuth({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
   }),
+  emailAndPassword: {
+    enabled: true,
+  },
 })
