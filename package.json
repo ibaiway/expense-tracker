@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev:backend": "pnpm --filter backend dev",
+    "test:backend": "pnpm --filter backend test",
     "dev:migrate:backend": "pnpm --filter backend dev:migrate",
     "dev:frontend": "pnpm --filter frontend dev"
   },

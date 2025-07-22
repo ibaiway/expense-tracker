@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
-    "dev:migrate": "tsx --env-file=.env src/migrator.ts"
+    "dev:migrate": "tsx --env-file=.env src/migrator.ts",
+    "test:unit": "vitest run tests/unit",
+    "test:component:prepare": "docker compose up -d",
+    "test:component": "pnpm test:component:prepare && pnpm dev:migrate && vitest run tests/component && pnpm test:component:teardown",
+    "test:component:teardown": "docker compose down",
+    "test": "pnpm test:unit && pnpm test:component"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +25,10 @@
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@types/pg": "^8.15.4",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.3",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

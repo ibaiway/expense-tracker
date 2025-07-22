@@ -6,10 +6,10 @@ export const auth = betterAuth({
   url: process.env.BETTER_AUTH_URL,
   database: new Pool({
     host: process.env.DATABASE_HOST,
-    port: Number(process.env.DATABASE_PORT),
-    user: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
+    port: Number(process.env.DATABASE_PORT) || 5432,
+    user: process.env.DATABASE_USERNAME || "testuser",
+    password: process.env.DATABASE_PASSWORD || "testpassword",
+    database: process.env.DATABASE_NAME || "testdb",
   }),
   emailAndPassword: {
     enabled: true,
