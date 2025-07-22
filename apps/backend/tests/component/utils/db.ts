@@ -5,6 +5,7 @@ interface TestDatabase {
   user: UserTable
   account: AccountTable
   session: SessionTable
+  verification: VerificationTable
 }
 
 interface UserTable {
@@ -42,6 +43,15 @@ interface SessionTable {
   ipAddress: string | null
   userAgent: string | null
   userId: string
+}
+
+interface VerificationTable {
+  id: Generated<string>
+  identifier: string
+  value: string
+  expiresAt: Date
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 const dialect = new PostgresDialect({
