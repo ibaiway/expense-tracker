@@ -10,7 +10,7 @@ beforeAll(async () => {
 
 describe("sign-up", () => {
   it("should sign up with email and password", async () => {
-    const { headers, response } = await auth.api.signUpEmail({
+    await auth.api.signUpEmail({
       returnHeaders: true,
       body: {
         email: "test@test.com",
@@ -26,15 +26,14 @@ describe("sign-up", () => {
       .executeTakeFirst()
     expect(user?.email).toBe("test@test.com")
     expect(user?.name).toBe("test")
+    expect(user?.id).toBeDefined()
 
-    /**
-     * 
-     *     expect(response.user.email).toBe("test@test.com")
-    expect(response.user.name).toBe("test")
-    expect(response.user.emailVerified).toBe(false)
-    expect(response.user.image).toBe(null)
-    expect(response.user.createdAt).toBeDefined()
-    expect(response.user.updatedAt).toBeDefined()
-     */
+    const account = await testDb
+      .selectFrom("account")
+      .selectAll()
+      .where("userId", "=", user!.id)
+      .executeTakeFirst()
+    expect(account?.providerId).toBe("email")
+    expect(account?.accountId).toBe("test@test.com")
   })
 })
