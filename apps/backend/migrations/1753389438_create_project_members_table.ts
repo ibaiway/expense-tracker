@@ -5,7 +5,7 @@ export async function up(db: Kysely<any>): Promise<void> {
         CREATE TABLE "project_members" (
             "projectId" UUID REFERENCES "project"("id") ON DELETE CASCADE,
             "userId" text REFERENCES "user"("id") ON DELETE CASCADE,
-            "role" text DEFAULT 'member',
+            "role" text NOT NULL DEFAULT 'member' CHECK (role IN ('member', 'admin')),
             "createdAt" timestamp NOT NULL DEFAULT now(),
             "updatedAt" timestamp NOT NULL DEFAULT now(),
             PRIMARY KEY ("projectId", "userId")
