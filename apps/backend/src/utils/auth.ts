@@ -7,9 +7,9 @@ export const auth = betterAuth({
   database: new Pool({
     host: process.env.DATABASE_HOST,
     port: Number(process.env.DATABASE_PORT) || 5432,
-    user: process.env.DATABASE_USERNAME || "testuser",
-    password: process.env.DATABASE_PASSWORD || "testpassword",
-    database: process.env.DATABASE_NAME || "testdb",
+    user: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
   }),
   emailAndPassword: {
     enabled: true,
