@@ -9,6 +9,8 @@ import {
 } from "kysely"
 import { Database } from "./types/database"
 
+process.loadEnvFile()
+
 async function migrateToLatest() {
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({

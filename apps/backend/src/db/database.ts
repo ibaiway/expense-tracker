@@ -2,6 +2,8 @@ import { Pool } from "pg"
 import { Kysely, PostgresDialect } from "kysely"
 import { Database } from "../types/database"
 
+process.loadEnvFile()
+
 const dialect = new PostgresDialect({
   pool: new Pool({
     database: process.env.DATABASE_NAME,
