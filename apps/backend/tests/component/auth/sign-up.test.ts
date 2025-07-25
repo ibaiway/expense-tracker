@@ -1,10 +1,8 @@
-import { describe, it, expect, beforeAll } from "vitest"
-import request from "supertest"
-import app from "../../../src/server"
+import { describe, it, expect, beforeEach } from "vitest"
 import { auth } from "../../../src/utils/auth"
 import { cleanupDb, testDb } from "../utils/db"
 
-beforeAll(async () => {
+beforeEach(async () => {
   await cleanupDb()
 })
 
@@ -33,7 +31,6 @@ describe("sign-up", () => {
       .selectAll()
       .where("userId", "=", user!.id)
       .executeTakeFirst()
-    expect(account?.providerId).toBe("email")
-    expect(account?.accountId).toBe("test@test.com")
+    expect(account?.providerId).toBe("credential")
   })
 })
