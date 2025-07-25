@@ -25,7 +25,7 @@ export async function createProject(req: AuthenticatedRequest, res: Response) {
         role: "admin",
       })
       .returning(["projectId", "userId", "role"])
-      .execute()
+      .executeTakeFirstOrThrow()
   })
   return project
 }
