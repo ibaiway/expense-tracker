@@ -31,7 +31,6 @@ describe("sign-up", () => {
       .selectAll()
       .where("userId", "=", user!.id)
       .executeTakeFirst()
-    console.log(account)
     expect(account?.providerId).toBe("credential")
   })
 })
