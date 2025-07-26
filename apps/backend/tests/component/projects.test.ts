@@ -19,6 +19,14 @@ const getSessionToken = (response: any) => {
 }
 
 describe("projects", () => {
+  it("should require authentication to create a project", async () => {
+    const projectResponse = await request(app).post("/api/projects").send({
+      name: "projecttest",
+    })
+    expect(projectResponse.status).toBe(401)
+    expect(projectResponse.body.error).toBe("Unauthorized")
+  })
+
   it("Should create a project", async () => {
     const signUpResponse = await request(app)
       .post("/api/auth/sign-up/email")
@@ -28,7 +36,6 @@ describe("projects", () => {
         password: "12345justatest",
       })
     expect(signUpResponse.status).toBe(200)
-    console.log(signUpResponse.headers)
     const sessionToken = getSessionToken(signUpResponse)
     expect(sessionToken).toBeDefined()
 
@@ -39,7 +46,6 @@ describe("projects", () => {
       })
       .set("Cookie", `better-auth.session_token=${sessionToken}`)
     expect(projectResponse.status).toBe(200)
-    console.log(projectResponse.body)
     expect(projectResponse.body.projectId).toBeDefined()
   })
 })
