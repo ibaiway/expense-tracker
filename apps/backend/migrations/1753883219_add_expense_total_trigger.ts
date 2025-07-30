@@ -8,32 +8,32 @@ export async function up(db: Kysely<any>): Promise<void> {
             -- INSERT
             IF TG_OP = 'INSERT' THEN
                 UPDATE project
-                SET totalSum = totalSum + NEW.convertedAmount
-                WHERE id = NEW."projectId";
+                SET total_sum = total_sum + NEW.converted_amount
+                WHERE id = NEW.project_id;
 
             -- DELETE
             ELSIF TG_OP = 'DELETE' THEN
                 UPDATE project
-                SET totalSum = totalSum - OLD.convertedAmount
-                WHERE id = OLD."projectId";
+                SET total_sum = total_sum - OLD.converted_amount
+                WHERE id = OLD.project_id;
 
             -- UPDATE
             ELSIF TG_OP = 'UPDATE' THEN
                 -- If projectId changes, subtract from old project and add to new
-                IF NEW."projectId" != OLD."projectId" THEN
+                IF NEW.project_id != OLD.project_id THEN
                     UPDATE project
-                    SET totalSum = totalSum - OLD.convertedAmount
-                    WHERE id = OLD."projectId";
+                    SET total_sum = total_sum - OLD.converted_amount
+                    WHERE id = OLD.project_id;
 
                     UPDATE project
-                    SET totalSum = totalSum + NEW.convertedAmount
-                    WHERE id = NEW."projectId";
+                    SET total_sum = total_sum + NEW.converted_amount
+                    WHERE id = NEW.project_id;
 
                 -- If amount or rate changed, update same project total
                 ELSE
                     UPDATE project
-                    SET totalSum = totalSum - OLD.convertedAmount + NEW.convertedAmount
-                    WHERE id = NEW."projectId";
+                    SET total_sum = total_sum - OLD.converted_amount + NEW.converted_amount
+                    WHERE id = NEW.project_id;
                 END IF;
             END IF;
 

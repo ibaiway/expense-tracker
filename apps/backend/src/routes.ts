@@ -6,6 +6,7 @@ import {
   createProject,
   getExpenses,
 } from "./controllers/project-controller"
+import { requireProjectMembership } from "./middlewares/projectMembership"
 
 const router = Router()
 
@@ -21,6 +22,7 @@ router.post("/projects", requireAuth, async (req: Request, res: Response) => {
 router.get(
   "/projects/:projectId/expenses",
   requireAuth,
+  requireProjectMembership,
   async (req: Request, res: Response) => {
     const expenses = await getExpenses(req as AuthenticatedRequest, res)
     res.send(expenses)
@@ -30,7 +32,8 @@ router.get(
 router.post(
   "/projects/:projectId/expenses",
   requireAuth,
-  async (req: Request, res: Response) => {
+  requireProjectMembership,
+  async (req, res: Response) => {
     const expenses = await createExpense(req as AuthenticatedRequest, res)
     res.send(expenses)
   }

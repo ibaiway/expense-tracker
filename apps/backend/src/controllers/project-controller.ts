@@ -45,8 +45,6 @@ export async function createExpense(req: AuthenticatedRequest, res: Response) {
   const { title, originalCurrency, originalAmount, exchangeRate, date } =
     req.body
 
-  console.log("PROJECT ID", projectId)
-
   const convertedAmount = originalAmount * exchangeRate
   const expense = await db
     .insertInto("expense")
