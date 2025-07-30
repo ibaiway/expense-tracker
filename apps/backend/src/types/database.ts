@@ -1,4 +1,4 @@
-import { Generated } from "kysely"
+import { ColumnType, Generated } from "kysely"
 
 export interface Database {
   project: ProjectTable
@@ -31,7 +31,7 @@ interface ExpenseTable {
   originalAmount: number
   convertedAmount: number
   exchangeRate: number
-  date: Date
+  date: ColumnType<Date, string>
   createdAt: Generated<Date>
   updatedAt: Generated<Date>
 }

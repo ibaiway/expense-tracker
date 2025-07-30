@@ -35,15 +35,25 @@ export async function getExpenses(req: AuthenticatedRequest, res: Response) {
   const { projectId } = req.params
   const expenses = await db
     .selectFrom("expense")
+    .selectAll()
     .where("projectId", "=", projectId)
     .execute()
+
   return expenses
 }
+
+const ExpenseSchema = z.object({
+  title: z.string(),
+  originalCurrency: z.string(),
+  originalAmount: z.number(),
+  exchangeRate: z.number(),
+  date: z.iso.date(),
+})
 
 export async function createExpense(req: AuthenticatedRequest, res: Response) {
   const { projectId } = req.params
   const { title, originalCurrency, originalAmount, exchangeRate, date } =
-    req.body
+    ExpenseSchema.parse(req.body)
 
   const convertedAmount = originalAmount * exchangeRate
   const expense = await db
