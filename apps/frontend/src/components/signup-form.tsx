@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
+import { IconInfoSquare } from "@tabler/icons-react"
+import { Link } from "react-router"
 
 export function SignUpForm({
   className,
@@ -42,12 +45,18 @@ export function SignUpForm({
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+                  <Tooltip>
+                    <TooltipTrigger className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                      <IconInfoSquare />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        Password must be at least 8 characters long and contain
+                        at least one uppercase letter, one lowercase letter, and
+                        one number.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 <Input id="password" type="password" required />
               </div>
@@ -62,9 +71,9 @@ export function SignUpForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <a href="/signin" className="underline underline-offset-4">
+              <Link to="/signin" className="underline underline-offset-4">
                 Sign in
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>
