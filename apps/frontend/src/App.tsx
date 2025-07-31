@@ -1,9 +1,8 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router"
+import { BrowserRouter, Routes, Route } from "react-router"
 import SignInPage from "./pages/auth/signin"
 import SignUpPage from "./pages/auth/signup"
 import DashboardPage from "./pages/dashboard/dashboard"
 import DashboardLayout from "./layouts/dashboard-layout"
-import SimpleLayout from "./layouts/simple-layout"
 
 function App() {
   return (
