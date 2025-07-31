@@ -6,7 +6,7 @@ export interface Database {
   expense: ExpenseTable
 }
 
-interface ProjectTable {
+export interface ProjectTable {
   id: Generated<string>
   name: string
   baseCurrency: string
@@ -15,7 +15,7 @@ interface ProjectTable {
   updatedAt: Generated<Date>
 }
 
-interface ProjectMembersTable {
+export interface ProjectMembersTable {
   projectId: string
   userId: string
   role: "member" | "admin"
@@ -23,7 +23,7 @@ interface ProjectMembersTable {
   updatedAt: Generated<Date>
 }
 
-interface ExpenseTable {
+export interface ExpenseTable {
   id: Generated<string>
   title: string
   projectId: string

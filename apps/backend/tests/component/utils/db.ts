@@ -1,11 +1,19 @@
-import { Generated, Kysely, PostgresDialect } from "kysely"
+import { CamelCasePlugin, Generated, Kysely, PostgresDialect } from "kysely"
 import { Pool } from "pg"
+import {
+  ExpenseTable,
+  ProjectMembersTable,
+  ProjectTable,
+} from "../../../src/types/database"
 
 interface TestDatabase {
   user: UserTable
   account: AccountTable
   session: SessionTable
   verification: VerificationTable
+  project: ProjectTable
+  project_members: ProjectMembersTable
+  expense: ExpenseTable
 }
 
 interface UserTable {
@@ -66,10 +74,15 @@ const dialect = new PostgresDialect({
 
 export const testDb = new Kysely<TestDatabase>({
   dialect,
+  plugins: [new CamelCasePlugin()],
 })
 
 export async function cleanupDb() {
   await testDb.deleteFrom("account").execute()
   await testDb.deleteFrom("session").execute()
   await testDb.deleteFrom("user").execute()
+  await testDb.deleteFrom("verification").execute()
+  await testDb.deleteFrom("project_members").execute()
+  await testDb.deleteFrom("expense").execute()
+  await testDb.deleteFrom("project").execute()
 }
