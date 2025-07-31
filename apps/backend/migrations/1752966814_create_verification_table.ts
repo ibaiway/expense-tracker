@@ -8,8 +8,9 @@ export async function up(db: Kysely<any>): Promise<void> {
             "id" text NOT NULL PRIMARY KEY,
             "identifier" text NOT NULL,
             "value" text NOT NULL,
-            "expiresAt" timestamp NOT NULL,
-            "createdAt" timestamp, "updatedAt" timestamp
+            "expires_at" timestamp NOT NULL,
+            "created_at" timestamp,
+            "updated_at" timestamp
         );
 
 `.execute(db)

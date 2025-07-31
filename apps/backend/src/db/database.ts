@@ -1,5 +1,5 @@
 import { Pool } from "pg"
-import { Kysely, PostgresDialect } from "kysely"
+import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely"
 import { Database } from "../types/database"
 
 process.loadEnvFile()
@@ -21,4 +21,5 @@ const dialect = new PostgresDialect({
 // to communicate with your database.
 export const db = new Kysely<Database>({
   dialect,
+  plugins: [new CamelCasePlugin()],
 })

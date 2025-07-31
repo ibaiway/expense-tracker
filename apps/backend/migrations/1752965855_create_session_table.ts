@@ -6,13 +6,13 @@ export async function up(db: Kysely<any>): Promise<void> {
   await sql`
         CREATE TABLE "session" (
             "id" text NOT NULL PRIMARY KEY, 
-            "expiresAt" timestamp NOT NULL, 
+            "expires_at" timestamp NOT NULL, 
             "token" text NOT NULL UNIQUE, 
-            "createdAt" timestamp NOT NULL, 
-            "updatedAt" timestamp NOT NULL, 
-            "ipAddress" text, 
-            "userAgent" text, 
-            "userId" text NOT NULL REFERENCES "user" ("id")
+            "created_at" timestamp NOT NULL, 
+            "updated_at" timestamp NOT NULL, 
+            "ip_address" text, 
+            "user_agent" text, 
+            "user_id" text NOT NULL REFERENCES "user" ("id")
         );
 `.execute(db)
 }

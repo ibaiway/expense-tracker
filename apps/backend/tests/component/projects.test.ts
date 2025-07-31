@@ -2,21 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest"
 import request from "supertest"
 import app from "../../src/server"
 import { cleanupDb } from "./utils/db"
+import { getSessionToken } from "./utils/auth"
 
 beforeEach(async () => {
   await cleanupDb()
 })
-
-const getSessionToken = (response: any) => {
-  const cookie = response.headers["set-cookie"]
-  const sessionToken = cookie?.find((c) =>
-    c.startsWith("better-auth.session_token=")
-  )
-  if (!sessionToken) {
-    return null
-  }
-  return sessionToken.split("=")[1]?.split(";")[0]
-}
 
 describe("projects", () => {
   it("should require authentication to create a project", async () => {
@@ -43,8 +33,10 @@ describe("projects", () => {
       .post("/api/projects")
       .send({
         name: "projecttest",
+        baseCurrency: "EUR",
       })
       .set("Cookie", `better-auth.session_token=${sessionToken}`)
+
     expect(projectResponse.status).toBe(200)
     expect(projectResponse.body.projectId).toBeDefined()
   })
