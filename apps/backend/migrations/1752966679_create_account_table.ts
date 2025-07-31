@@ -6,18 +6,18 @@ export async function up(db: Kysely<any>): Promise<void> {
   await sql`
         CREATE TABLE "account" (
             "id" text NOT NULL PRIMARY KEY, 
-            "accountId" text NOT NULL, 
-            "providerId" text NOT NULL, 
-            "userId" text NOT NULL REFERENCES "user" ("id"), 
-            "accessToken" text, 
-            "refreshToken" text, 
-            "idToken" text, 
-            "accessTokenExpiresAt" timestamp, 
-            "refreshTokenExpiresAt" timestamp, 
+            "account_id" text NOT NULL, 
+            "provider_id" text NOT NULL, 
+            "user_id" text NOT NULL REFERENCES "user" ("id"), 
+            "access_token" text, 
+            "refresh_token" text, 
+            "id_token" text, 
+            "access_token_expires_at" timestamp, 
+            "refresh_token_expires_at" timestamp, 
             "scope" text, 
             "password" text, 
-            "createdAt" timestamp NOT NULL, 
-            "updatedAt" timestamp NOT NULL
+            "created_at" timestamp NOT NULL, 
+            "updated_at" timestamp NOT NULL
         );
 
 `.execute(db)
