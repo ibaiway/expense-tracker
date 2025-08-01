@@ -11,12 +11,53 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { IconInfoSquare } from "@tabler/icons-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { useState } from "react"
+import { authClient } from "@/auth/auth-client"
 
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const session = authClient.useSession()
+
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    password: "",
+  })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }))
+  }
+  const navigate = useNavigate()
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Signup form values:", formData)
+    authClient.signUp.email(
+      {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+      },
+      {
+        onSuccess: () => {
+          console.log("Signup successful")
+          navigate("/dashboard")
+          session.refetch()
+        },
+        onError: (error) => {
+          console.error("Signup error:", error)
+        },
+      }
+    )
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -27,7 +68,7 @@ export function SignUpForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -36,11 +77,20 @@ export function SignUpForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  value={formData.email}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" type="text" placeholder="John" required />
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="grid gap-3">
                 <div className="flex items-center">
@@ -58,7 +108,13 @@ export function SignUpForm({
                     </TooltipContent>
                   </Tooltip>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
