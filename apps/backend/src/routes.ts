@@ -1,5 +1,4 @@
 import { Router, Response, Request } from "express"
-import { db } from "./db/database"
 import { AuthenticatedRequest, requireAuth } from "./middlewares/auth"
 import {
   createExpense,
@@ -12,8 +11,7 @@ import { requireProjectMembership } from "./middlewares/projectMembership"
 const router = Router()
 
 router.get("/projects", requireAuth, async (req, res) => {
-  const projects = await getProjects(req as AuthenticatedRequest, res)
-  res.send(projects)
+  await getProjects(req as AuthenticatedRequest, res)
 })
 
 router.post("/projects", requireAuth, async (req: Request, res: Response) => {

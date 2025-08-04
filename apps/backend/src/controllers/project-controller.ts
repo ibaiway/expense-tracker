@@ -2,6 +2,7 @@ import { z } from "zod"
 import { db } from "../db/database"
 import { AuthenticatedRequest } from "../middlewares/auth"
 import { Response } from "express"
+import { getProjectsFromUser } from "../services/project-service"
 
 const ProjectSchema = z.object({
   name: z.string(),
@@ -10,19 +11,8 @@ const ProjectSchema = z.object({
 
 export async function getProjects(req: AuthenticatedRequest, res: Response) {
   const { userId } = req.session
-  console.log(userId)
-  const projects = await db
-    .selectFrom("project_members")
-    .where("project_members.userId", "=", userId)
-    .innerJoin("project", "project.id", "project_members.projectId")
-    .select([
-      "project.id",
-      "project.name",
-      "project.baseCurrency",
-      "project_members.role",
-    ])
-    .execute()
-  return projects
+  const projects = await getProjectsFromUser(userId)
+  res.send(projects)
 }
 
 export async function createProject(req: AuthenticatedRequest, res: Response) {
