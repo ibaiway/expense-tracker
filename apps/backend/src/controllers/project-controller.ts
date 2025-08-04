@@ -8,6 +8,23 @@ const ProjectSchema = z.object({
   baseCurrency: z.string(),
 })
 
+export async function getProjects(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req.session
+  console.log(userId)
+  const projects = await db
+    .selectFrom("project_members")
+    .where("project_members.userId", "=", userId)
+    .innerJoin("project", "project.id", "project_members.projectId")
+    .select([
+      "project.id",
+      "project.name",
+      "project.baseCurrency",
+      "project_members.role",
+    ])
+    .execute()
+  return projects
+}
+
 export async function createProject(req: AuthenticatedRequest, res: Response) {
   const { name, baseCurrency } = ProjectSchema.parse(req.body)
 

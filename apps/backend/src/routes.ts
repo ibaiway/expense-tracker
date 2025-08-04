@@ -5,13 +5,15 @@ import {
   createExpense,
   createProject,
   getExpenses,
+  getProjects,
 } from "./controllers/project-controller"
 import { requireProjectMembership } from "./middlewares/projectMembership"
 
 const router = Router()
 
-router.get("/projects", (req, res) => {
-  res.send(db.selectFrom("project").selectAll().execute())
+router.get("/projects", requireAuth, async (req, res) => {
+  const projects = await getProjects(req as AuthenticatedRequest, res)
+  res.send(projects)
 })
 
 router.post("/projects", requireAuth, async (req: Request, res: Response) => {
