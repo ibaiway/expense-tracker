@@ -2,7 +2,10 @@ import { z } from "zod"
 import { db } from "../db/database"
 import { AuthenticatedRequest } from "../middlewares/auth"
 import { Response } from "express"
-import { getProjectsFromUser } from "../services/project-service"
+import {
+  addProjectAndAddMember,
+  getProjectsFromUser,
+} from "../services/project-service"
 
 const ProjectSchema = z.object({
   name: z.string(),
@@ -18,24 +21,12 @@ export async function getProjects(req: AuthenticatedRequest, res: Response) {
 export async function createProject(req: AuthenticatedRequest, res: Response) {
   const { name, baseCurrency } = ProjectSchema.parse(req.body)
 
-  const project = await db.transaction().execute(async (trx) => {
-    const project = await trx
-      .insertInto("project")
-      .values({ name, baseCurrency })
-      .returningAll()
-      .executeTakeFirstOrThrow()
-
-    return await trx
-      .insertInto("project_members")
-      .values({
-        projectId: project.id,
-        userId: req.session.userId,
-        role: "admin",
-      })
-      .returning(["projectId", "userId", "role"])
-      .executeTakeFirstOrThrow()
-  })
-  return project
+  const project = await addProjectAndAddMember(
+    req.session.userId,
+    name,
+    baseCurrency
+  )
+  res.send(project)
 }
 
 export async function getExpenses(req: AuthenticatedRequest, res: Response) {

@@ -15,8 +15,7 @@ router.get("/projects", requireAuth, async (req, res) => {
 })
 
 router.post("/projects", requireAuth, async (req: Request, res: Response) => {
-  const project = await createProject(req as AuthenticatedRequest, res)
-  res.send(project)
+  await createProject(req as AuthenticatedRequest, res)
 })
 
 router.get(
