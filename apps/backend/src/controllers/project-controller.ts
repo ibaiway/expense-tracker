@@ -81,6 +81,7 @@ export async function createExpense(req: AuthenticatedRequest, res: Response) {
 
 export async function updateExpense(req: AuthenticatedRequest, res: Response) {
   const { projectId, expenseId } = req.params
+
   const { title, originalCurrency, originalAmount, exchangeRate, date } =
     ExpenseSchema.parse(req.body)
 

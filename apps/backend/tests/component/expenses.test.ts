@@ -80,6 +80,50 @@ describe("expenses", () => {
     expect(expenseResponse.status).toBe(200)
   })
 
+  it("POST: should return a 400 if the expense is invalid", async () => {
+    const { id: projectId } = await testDb
+      .insertInto("project")
+      .values({
+        name: "projecttest",
+        baseCurrency: "EUR",
+      })
+      .returning("id")
+      .executeTakeFirstOrThrow()
+
+    await testDb
+      .insertInto("project_members")
+      .values({
+        projectId: projectId,
+        userId: userId,
+        role: "admin",
+      })
+      .executeTakeFirstOrThrow()
+
+    const expenseResponse = await request(app)
+      .post(`/api/projects/${projectId}/expenses`)
+      .send({})
+      .set("Cookie", `better-auth.session_token=${sessionToken}`)
+
+    expect(expenseResponse.status).toBe(400)
+    expect(expenseResponse.body).toEqual({
+      error: "Validation failed",
+      details: {
+        fieldErrors: {
+          title: ["Invalid input: expected string, received undefined"],
+          originalCurrency: [
+            "Invalid input: expected string, received undefined",
+          ],
+          originalAmount: [
+            "Invalid input: expected number, received undefined",
+          ],
+          exchangeRate: ["Invalid input: expected number, received undefined"],
+          date: ["Invalid input: expected string, received undefined"],
+        },
+        formErrors: [],
+      },
+    })
+  })
+
   it("GET: should require authentication to get expenses", async () => {
     const getExpensesResponse = await request(app).get(
       "/api/projects/1/expenses"
