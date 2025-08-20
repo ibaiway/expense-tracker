@@ -1,11 +1,27 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, beforeAll } from "vitest"
 import request from "supertest"
 import app from "../../src/server"
-import { cleanupDb } from "./utils/db"
+import { cleanupDb, cleanupNonAuthTables } from "./utils/db"
 import { getSessionToken } from "./utils/auth"
 
-beforeEach(async () => {
+let sessionToken: string
+
+beforeAll(async () => {
   await cleanupDb()
+  const signUpResponse = await request(app)
+    .post("/api/auth/sign-up/email")
+    .send({
+      name: "userA",
+      email: "userA@test.com",
+      password: "123456789ABCD",
+    })
+  expect(signUpResponse.status).toBe(200)
+  sessionToken = getSessionToken(signUpResponse)
+  expect(sessionToken).toBeDefined()
+})
+
+beforeEach(async () => {
+  await cleanupNonAuthTables()
 })
 
 describe("projects", () => {
@@ -18,17 +34,6 @@ describe("projects", () => {
   })
 
   it("Should create a project", async () => {
-    const signUpResponse = await request(app)
-      .post("/api/auth/sign-up/email")
-      .send({
-        name: "nametest",
-        email: "test@test.com",
-        password: "12345justatest",
-      })
-    expect(signUpResponse.status).toBe(200)
-    const sessionToken = getSessionToken(signUpResponse)
-    expect(sessionToken).toBeDefined()
-
     const projectResponse = await request(app)
       .post("/api/projects")
       .send({
@@ -42,14 +47,6 @@ describe("projects", () => {
   })
 
   it("Should get projects the user is a member of", async () => {
-    const signUpResponseUserA = await request(app)
-      .post("/api/auth/sign-up/email")
-      .send({
-        name: "userA",
-        email: "userA@test.com",
-        password: "12345justatest",
-      })
-    expect(signUpResponseUserA.status).toBe(200)
     const signUpResponseUserB = await request(app)
       .post("/api/auth/sign-up/email")
       .send({
@@ -58,7 +55,6 @@ describe("projects", () => {
         password: "12345justatest",
       })
     expect(signUpResponseUserB.status).toBe(200)
-    const sessionTokenUserA = getSessionToken(signUpResponseUserA)
     const sessionTokenUserB = getSessionToken(signUpResponseUserB)
 
     const postProjectResponseUserA = await request(app)
@@ -67,7 +63,7 @@ describe("projects", () => {
         name: "Project A1",
         baseCurrency: "EUR",
       })
-      .set("Cookie", `better-auth.session_token=${sessionTokenUserA}`)
+      .set("Cookie", `better-auth.session_token=${sessionToken}`)
     expect(postProjectResponseUserA.status).toBe(200)
     const postProjectResponseUserB = await request(app)
       .post("/api/projects")

@@ -86,3 +86,9 @@ export async function cleanupDb() {
   await testDb.deleteFrom("expense").execute()
   await testDb.deleteFrom("project").execute()
 }
+
+export async function cleanupNonAuthTables() {
+  await testDb.deleteFrom("project_members").execute()
+  await testDb.deleteFrom("expense").execute()
+  await testDb.deleteFrom("project").execute()
+}
