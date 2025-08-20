@@ -1,12 +1,30 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, beforeAll } from "vitest"
 import request from "supertest"
 import app from "../../src/server"
-import { cleanupDb, testDb } from "./utils/db"
+import { cleanupDb, cleanupNonAuthTables, testDb } from "./utils/db"
 import { getSessionToken } from "./utils/auth"
 import { addProjectAndAddMember } from "../../src/services/project-service"
 
-beforeEach(async () => {
+let sessionToken: string
+let userId: string
+
+beforeAll(async () => {
   await cleanupDb()
+  const signUpResponse = await request(app)
+    .post("/api/auth/sign-up/email")
+    .send({
+      name: "userA",
+      email: "userA@test.com",
+      password: "123456789ABCD",
+    })
+  expect(signUpResponse.status).toBe(200)
+  sessionToken = getSessionToken(signUpResponse)
+  expect(sessionToken).toBeDefined()
+  userId = signUpResponse.body.user.id
+})
+
+beforeEach(async () => {
+  await cleanupNonAuthTables()
 })
 
 describe("expenses", () => {
@@ -21,17 +39,6 @@ describe("expenses", () => {
   })
 
   it("should create an expense", async () => {
-    const signUpResponse = await request(app)
-      .post("/api/auth/sign-up/email")
-      .send({
-        name: "nametest",
-        email: "test@test.com",
-        password: "12345justatest",
-      })
-    expect(signUpResponse.status).toBe(200)
-    const sessionToken = getSessionToken(signUpResponse)
-    expect(sessionToken).toBeDefined()
-
     const { id: projectId } = await testDb
       .insertInto("project")
       .values({
@@ -45,7 +52,7 @@ describe("expenses", () => {
       .insertInto("project_members")
       .values({
         projectId: projectId,
-        userId: signUpResponse.body.user.id,
+        userId: userId,
         role: "admin",
       })
       .executeTakeFirstOrThrow()
@@ -74,19 +81,8 @@ describe("expenses", () => {
   })
 
   it("should get expenses", async () => {
-    const signUpResponse = await request(app)
-      .post("/api/auth/sign-up/email")
-      .send({
-        name: "nametest",
-        email: "test@test.com",
-        password: "12345justatest",
-      })
-    expect(signUpResponse.status).toBe(200)
-    const sessionToken = getSessionToken(signUpResponse)
-    expect(sessionToken).toBeDefined()
-
     const { projectId } = await addProjectAndAddMember(
-      signUpResponse.body.user.id,
+      userId,
       "projecttest",
       "EUR"
     )
