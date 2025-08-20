@@ -5,6 +5,7 @@ import {
   createProject,
   getExpenses,
   getProjects,
+  updateExpense,
 } from "./controllers/project-controller"
 import { requireProjectMembership } from "./middlewares/projectMembership"
 
@@ -35,6 +36,15 @@ router.post(
   async (req, res: Response) => {
     const expenses = await createExpense(req as AuthenticatedRequest, res)
     res.send(expenses)
+  }
+)
+
+router.put(
+  "/projects/:projectId/expenses/:expenseId",
+  requireAuth,
+  requireProjectMembership,
+  async (req, res: Response) => {
+    await updateExpense(req as AuthenticatedRequest, res)
   }
 )
 
