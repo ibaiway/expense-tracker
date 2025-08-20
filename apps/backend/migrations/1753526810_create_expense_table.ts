@@ -11,8 +11,8 @@ export async function up(db: Kysely<any>): Promise<void> {
             "converted_amount" numeric(20, 3) NOT NULL,
             "exchange_rate" numeric(20, 6) NOT NULL,
             "date" timestamp NOT NULL,
-            "createdAt" timestamp NOT NULL DEFAULT now(),
-            "updatedAt" timestamp NOT NULL DEFAULT now()
+            "created_at" timestamp NOT NULL DEFAULT now(),
+            "updated_at" timestamp NOT NULL DEFAULT now()
         );
 `.execute(db)
 }
