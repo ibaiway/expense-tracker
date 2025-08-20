@@ -7,6 +7,7 @@ import {
   getProjectsFromUser,
 } from "../services/project-service"
 import { updateExpenseById } from "../services/expense-service"
+import { ExpenseSchema } from "../utils/schemas/expense"
 
 const ProjectSchema = z.object({
   name: z.string(),
@@ -40,14 +41,6 @@ export async function getExpenses(req: AuthenticatedRequest, res: Response) {
 
   return expenses
 }
-
-const ExpenseSchema = z.object({
-  title: z.string(),
-  originalCurrency: z.string(),
-  originalAmount: z.number(),
-  exchangeRate: z.number(),
-  date: z.iso.date(),
-})
 
 export async function createExpense(req: AuthenticatedRequest, res: Response) {
   const { projectId } = req.params
