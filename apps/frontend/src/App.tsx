@@ -7,6 +7,7 @@ import DashboardLayout from "./layouts/dashboard-layout"
 import { authClient } from "./auth/auth-client"
 import ProjectsPage from "./pages/dashboard/projects"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import ProjectPage from "./pages/dashboard/project"
 
 function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const session = authClient.useSession()
@@ -36,6 +37,7 @@ function App() {
           >
             <Route index element={<DashboardPage />} />
             <Route path="projects" element={<ProjectsPage />} />
+            <Route path="projects/:projectId" element={<ProjectPage />} />
             <Route path="settings" element={<h1>Settings</h1>} />
           </Route>
         </Routes>

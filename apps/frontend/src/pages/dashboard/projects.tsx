@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { Navigate } from "react-router"
+import { Link, Navigate } from "react-router"
 
 // Types
 type Project = {
@@ -166,13 +166,15 @@ function CreateProjectDialog({
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <Card className="@container/card">
-      <CardHeader>
-        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-          {project.name}
-        </CardTitle>
-      </CardHeader>
-    </Card>
+    <Link to={`/dashboard/projects/${project.id}`}>
+      <Card className="@container/card">
+        <CardHeader>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {project.name}
+          </CardTitle>
+        </CardHeader>
+      </Card>
+    </Link>
   )
 }
 
