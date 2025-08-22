@@ -8,19 +8,18 @@ import {
   FileMigrationProvider,
 } from "kysely"
 import { Database } from "./types/database"
-
-process.loadEnvFile()
+import { config } from "./config/config"
 
 async function migrateToLatest() {
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        host: process.env.DATABASE_HOST,
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USERNAME,
-        port: Number(process.env.DATABASE_PORT),
-        password: process.env.DATABASE_PASSWORD,
-        max: 10,
+        host: config.database.host,
+        database: config.database.name,
+        user: config.database.username,
+        port: config.database.port,
+        password: config.database.password,
+        max: config.database.maxConnections,
       }),
     }),
   })
