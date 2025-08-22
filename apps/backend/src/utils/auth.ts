@@ -1,17 +1,17 @@
 import { betterAuth } from "better-auth"
 import { Pool } from "pg"
-
-process.loadEnvFile()
+import { config } from "../config/config"
 
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET,
-  url: process.env.BETTER_AUTH_URL,
+  secret: config.auth.secret,
+  url: config.auth.url,
   database: new Pool({
-    host: process.env.DATABASE_HOST,
-    port: Number(process.env.DATABASE_PORT),
-    user: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.username,
+    password: config.database.password,
+    database: config.database.name,
+    max: config.database.maxConnections,
   }),
   emailAndPassword: {
     enabled: true,

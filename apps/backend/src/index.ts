@@ -1,7 +1,18 @@
+import { config } from "./config/config"
 import app from "./server"
 
-const port = 3001
+async function startServer() {
+  try {
+    const { port, host } = config.server
 
-app.listen(port, () => {
-  console.log(`Backend running on http://localhost:${port}`)
-})
+    app.listen(port, host, () => {
+      console.log(`Backend running on http://${host}:${port}`)
+      console.log(`Environment: ${config.env}`)
+    })
+  } catch (error) {
+    console.error("Failed to start server:", error)
+    process.exit(1)
+  }
+}
+
+startServer()

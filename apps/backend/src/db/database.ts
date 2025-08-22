@@ -1,17 +1,16 @@
 import { Pool } from "pg"
 import { CamelCasePlugin, Kysely, PostgresDialect } from "kysely"
 import { Database } from "../types/database"
-
-process.loadEnvFile()
+import { config } from "../config/config"
 
 const dialect = new PostgresDialect({
   pool: new Pool({
-    database: process.env.DATABASE_NAME,
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USERNAME,
-    port: Number(process.env.DATABASE_PORT),
-    password: process.env.DATABASE_PASSWORD,
-    max: 10,
+    database: config.database.name,
+    host: config.database.host,
+    user: config.database.username,
+    port: config.database.port,
+    password: config.database.password,
+    max: config.database.maxConnections,
   }),
 })
 
