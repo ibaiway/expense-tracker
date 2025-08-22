@@ -5,6 +5,7 @@ import SignUpPage from "./pages/auth/signup"
 import DashboardPage from "./pages/dashboard/dashboard"
 import DashboardLayout from "./layouts/dashboard-layout"
 import { authClient } from "./auth/auth-client"
+import ProjectsPage from "./pages/dashboard/projects"
 
 function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const session = authClient.useSession()
@@ -30,7 +31,7 @@ function App() {
           }
         >
           <Route index element={<DashboardPage />} />
-          <Route path="projects" element={<h1>Projects</h1>} />
+          <Route path="projects" element={<ProjectsPage />} />
           <Route path="settings" element={<h1>Settings</h1>} />
         </Route>
       </Routes>
